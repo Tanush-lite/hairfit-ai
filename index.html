@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HairFit AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>HairFit AI</h1>
+        <p>AI Hairstyle Recommendation App</p>
+
+        <!-- Upload Image -->
+        <input type="file" id="imageUpload" accept="image/*" capture="user">
+
+        <!-- Analyze Button -->
+        <button id="analyzeBtn">Analyze Face</button>
+
+        <!-- Result -->
+        <h2 id="faceShapeResult">Face Shape: Not Detected</h2>
+
+        <!-- Hairstyle Buttons -->
+        <div class="hairstyles">
+            <button onclick="applyStyle('quiff.png')">Quiff</button>
+            <button onclick="applyStyle('buzz cut.png')">Buzz Cut</button>
+            <button onclick="applyStyle('pompadour.png')">Pompadour</button>
+            <button onclick="applyStyle('Fade hair cut.png')">Fade</button>
+        </div>
+
+        <!-- Canvas Preview -->
+        <canvas id="previewCanvas"></canvas>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
