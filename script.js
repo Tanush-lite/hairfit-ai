@@ -1,45 +1,45 @@
-const imageUpload = document.getElementById("imageUpload");
-const canvas = document.getElementById("previewCanvas");
-const ctx = canvas.getContext("2d");
-const faceShapeResult = document.getElementById("faceShapeResult");
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: white;
+    text-align: center;
+}
 
-let userImage = new Image();
+.container {
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+}
 
-imageUpload.addEventListener("change", function(event) {
-    const file = event.target.files[0];
+input {
+    margin: 20px 0;
+}
 
-    if (!file) return;
+button {
+    padding: 12px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
 
-    const reader = new FileReader();
+button:hover {
+    background: #1d4ed8;
+}
 
-    reader.onload = function(e) {
-        userImage.onload = function() {
-            canvas.width = userImage.width;
-            canvas.height = userImage.height;
-            ctx.drawImage(userImage, 0, 0);
-        };
+#previewImage {
+    width: 100%;
+    max-width: 350px;
+    margin-top: 20px;
+    border-radius: 12px;
+    display: none;
+}
 
-        userImage.src = e.target.result;
-    };
-
-    reader.readAsDataURL(file);
-});
-
-document.getElementById("analyzeBtn").addEventListener("click", function() {
-    faceShapeResult.textContent = "Face Shape: Oval";
-});
-
-function applyStyle(styleFile) {
-    if (!userImage.src) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(userImage, 0, 0);
-
-    const hair = new Image();
-
-    hair.onload = function() {
-        ctx.drawImage(hair, canvas.width * 0.2, 20, canvas.width * 0.6, canvas.height * 0.3);
-    };
-
-    hair.src = "hairstyles/" + styleFile;
+#recommendations {
+    margin-top: 20px;
+    font-size: 18px;
 }
