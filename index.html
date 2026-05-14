@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,22 +11,131 @@
 
     <div class="container">
         <h1>HairFit AI</h1>
-        <p>AI Face Shape Analyzer</p>
+        <p>AI Hairstyle Recommendation App</p>
 
+        <!-- Upload Image -->
         <input type="file" id="imageUpload" accept="image/*" capture="user">
+
+        <!-- Analyze Button -->
         <button id="analyzeBtn">Analyze Face</button>
 
-        <img id="previewImage" src="" alt="Preview">
-
+        <!-- Result -->
         <h2 id="faceShapeResult">Face Shape: Not Detected</h2>
 
-        <div id="recommendations"></div>
-    </div>
+        <!-- Hairstyle Buttons -->
+        <div class="hairstyles">
+            <button onclick="applyStyle('quiff.png')">Quiff</button>
+            <button onclick="applyStyle('buzz cut.png')">Buzz Cut</button>
+            <button onclick="applyStyle('pompadour.png')">Pompadour</button>
+            <button onclick="applyStyle('Fade hair cut.png')">Fade</button>
+        </div>
 
-    <!-- MediaPipe -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+        <!-- Canvas Preview -->
+        <canvas id="previewCanvas"></canvas>
+    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111827;
+    color: white;
+    text-align: center;
+}
+
+.container {
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+input {
+    margin: 20px 0;
+    padding: 10px;
+}
+
+button {
+    padding: 12px 20px;
+    margin: 8px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+canvas {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 400px;
+    border: 2px solid white;
+    border-radius: 12px;
+    background: white;
+}
+
+.hairstyles {
+    margin-top: 20px;
+}
+
+
+const imageUpload = document.getElementById("imageUpload");
+const canvas = document.getElementById("previewCanvas");
+const ctx = canvas.getContext("2d");
+const faceShapeResult = document.getElementById("faceShapeResult");
+
+let userImage = new Image();
+
+imageUpload.addEventListener("change", function(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        userImage.onload = function() {
+            canvas.width = userImage.width;
+            canvas.height = userImage.height;
+            ctx.drawImage(userImage, 0, 0);
+        };
+
+        userImage.src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+});
+
+document.getElementById("analyzeBtn").addEventListener("click", function() {
+    faceShapeResult.textContent = "Face Shape: Oval";
+});
+
+function applyStyle(styleFile) {
+    if (!userImage.src) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(userImage, 0, 0);
+
+    const hair = new Image();
+
+    hair.onload = function() {
+        ctx.drawImage(hair, canvas.width * 0.2, 20, canvas.width * 0.6, canvas.height * 0.3);
+    };
+
+    hair.src = "hairstyles/" + styleFile;
+}
+
+
+modify this code must be clean user freindly and futurstic ai face model analyazer 
+```
