@@ -1,27 +1,34 @@
 const imageUpload = document.getElementById("imageUpload");
 const analyzeBtn = document.getElementById("analyzeBtn");
-const previewImage = document.getElementById("previewImage");
+const canvas = document.getElementById("previewCanvas");
+const ctx = canvas.getContext("2d");
 const faceShapeResult = document.getElementById("faceShapeResult");
-const recommendations = document.getElementById("recommendations");
 
-let uploadedImage = null;
+let userImage = new Image();
+let currentLandmarks = null;
 
-imageUpload.addEventListener("change", function (event) {
+// Upload image
+imageUpload.addEventListener("change", function(event) {
     const file = event.target.files[0];
-
     if (!file) return;
 
     const reader = new FileReader();
 
-    reader.onload = function (e) {
-        previewImage.src = e.target.result;
-        previewImage.style.display = "block";
-        uploadedImage = previewImage;
+    reader.onload = function(e) {
+        userImage.onload = function() {
+            canvas.width = userImage.width;
+            canvas.height = userImage.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(userImage, 0, 0);
+        };
+
+        userImage.src = e.target.result;
     };
 
     reader.readAsDataURL(file);
 });
 
+// MediaPipe setup
 const faceMesh = new FaceMesh({
     locateFile: (file) => {
         return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
@@ -37,15 +44,17 @@ faceMesh.setOptions({
 
 faceMesh.onResults(onResults);
 
+// Analyze face
 analyzeBtn.addEventListener("click", async () => {
-    if (!uploadedImage) {
+    if (!userImage.src) {
         alert("Please upload an image first.");
         return;
     }
 
-    await faceMesh.send({ image: uploadedImage });
+    await faceMesh.send({ image: userImage });
 });
 
+// Distance helper
 function getDistance(a, b) {
     return Math.sqrt(
         Math.pow(a.x - b.x, 2) +
@@ -53,6 +62,7 @@ function getDistance(a, b) {
     );
 }
 
+// Face shape detection
 function classifyFaceShape(landmarks) {
     const foreheadLeft = landmarks[234];
     const foreheadRight = landmarks[454];
@@ -75,32 +85,54 @@ function classifyFaceShape(landmarks) {
     return "Oval";
 }
 
-function getRecommendations(shape) {
-    const styles = {
-        Round: ["Quiff", "Pompadour", "Faux Hawk"],
-        Square: ["Buzz Cut", "Crew Cut", "Textured Crop"],
-        Oval: ["Fade", "Side Part", "Undercut"],
-        Heart: ["Fringe", "Side Sweep", "Textured Crop"],
-        Rectangle: ["Layered Cut", "Side Part", "Fringe"]
-    };
-
-    return styles[shape] || [];
-}
-
+// Results
 function onResults(results) {
     if (!results.multiFaceLandmarks.length) {
-        faceShapeResult.textContent = "No face detected.";
+        faceShapeResult.textContent = "No face detected";
         return;
     }
 
-    const landmarks = results.multiFaceLandmarks[0];
-    const shape = classifyFaceShape(landmarks);
+    currentLandmarks = results.multiFaceLandmarks[0];
 
+    const shape = classifyFaceShape(currentLandmarks);
     faceShapeResult.textContent = `Face Shape: ${shape}`;
 
-    const recs = getRecommendations(shape);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(userImage, 0, 0);
+}
 
-    recommendations.innerHTML =
-        "<h3>Recommended Hairstyles:</h3>" +
-        recs.map(style => `<p>${style}</p>`).join("");
+// Hairstyle overlay
+function applyStyle(styleFile) {
+    if (!currentLandmarks) {
+        alert("Analyze face first.");
+        return;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(userImage, 0, 0);
+
+    const hair = new Image();
+
+    hair.onload = function() {
+        const leftTemple = currentLandmarks[234];
+        const rightTemple = currentLandmarks[454];
+        const foreheadTop = currentLandmarks[10];
+
+        const x1 = leftTemple.x * canvas.width;
+        const x2 = rightTemple.x * canvas.width;
+        const y = foreheadTop.y * canvas.height;
+
+        const hairWidth = (x2 - x1) * 1.4;
+        const hairHeight = hairWidth * 0.8;
+
+        ctx.drawImage(
+            hair,
+            x1 - hairWidth * 0.2,
+            y - hairHeight * 0.9,
+            hairWidth,
+            hairHeight
+        );
+    };
+
+    hair.src = "hairstyles/" + styleFile;
 }
