@@ -10,16 +10,27 @@
 
     <div class="container">
         <h1>HairFit AI</h1>
-        <p>AI Face Shape Analyzer</p>
+        <p>AI Hairstyle Recommendation App</p>
 
+        <!-- Upload Image -->
         <input type="file" id="imageUpload" accept="image/*" capture="user">
+
+        <!-- Analyze Button -->
         <button id="analyzeBtn">Analyze Face</button>
 
-        <img id="previewImage" src="" alt="Preview">
-
+        <!-- Result -->
         <h2 id="faceShapeResult">Face Shape: Not Detected</h2>
 
-        <div id="recommendations"></div>
+        <!-- Hairstyle Buttons -->
+        <div class="hairstyles">
+            <button onclick="applyStyle('quiff.png')">Quiff</button>
+            <button onclick="applyStyle('buzz cut.png')">Buzz Cut</button>
+            <button onclick="applyStyle('pompadour.png')">Pompadour</button>
+            <button onclick="applyStyle('Fade hair cut.png')">Fade</button>
+        </div>
+
+        <!-- Canvas -->
+        <canvas id="previewCanvas"></canvas>
     </div>
 
     <!-- MediaPipe -->
