@@ -12,13 +12,25 @@ body {
     margin: auto;
 }
 
+h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
 input {
     margin: 20px 0;
+    padding: 10px;
+    font-size: 16px;
 }
 
 button {
     padding: 12px 20px;
-    margin: 10px;
+    margin: 8px;
     border: none;
     border-radius: 10px;
     background: #2563eb;
@@ -31,15 +43,15 @@ button:hover {
     background: #1d4ed8;
 }
 
-#previewImage {
-    width: 100%;
-    max-width: 350px;
+.hairstyles {
     margin-top: 20px;
-    border-radius: 12px;
-    display: none;
 }
 
-#recommendations {
+canvas {
     margin-top: 20px;
-    font-size: 18px;
+    width: 100%;
+    max-width: 400px;
+    border: 2px solid white;
+    border-radius: 12px;
+    background: white;
 }
